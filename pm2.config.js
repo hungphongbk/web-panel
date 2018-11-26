@@ -42,6 +42,25 @@ module.exports = {
         NODE_ENV: "production",
         HOST: "web-panel.vaithuhay.com"
       }
+    },
+    "production-reload": {
+      user: "root",
+      host: [
+        {
+          host: "188.166.177.127",
+          port: "2234"
+        }
+      ],
+      ssh_options: "StrictHostKeyChecking=no",
+      ref: "origin/master",
+      repo: "git@github.com:hungphongbk/web-panel.git",
+      path: "/root/www/web-panel",
+      "post-deploy":
+        "pm2 reload pm2.config.js --env production && ",
+      env: {
+        NODE_ENV: "production",
+        HOST: "web-panel.vaithuhay.com"
+      }
     }
   }
 };
