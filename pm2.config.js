@@ -2,7 +2,7 @@ module.exports = {
   apps: [
     {
       name: "web-panel",
-      script: "yarn",
+      script: "/usr/bin/yarn",
 
       // Options reference: https://pm2.io/doc/en/runtime/reference/ecosystem-file/
       args: "start",
