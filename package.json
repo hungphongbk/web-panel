@@ -27,13 +27,13 @@
     "webpack": "latest",
     "webpack-dev-middleware": "latest",
     "webpack-hot-middleware": "^2.24.3",
-    "lodash": "latest"
-  },
-  "devDependencies": {
-    "@types/mongoose": "^5.3.1",
+    "lodash": "latest",
     "babel-eslint": "^10.0.1",
     "eslint": "^5.8.0",
     "eslint-plugin-vue": "^5.0.0-0"
+  },
+  "devDependencies": {
+    "@types/mongoose": "^5.3.1"
   },
   "eslintConfig": {
     "root": true,
