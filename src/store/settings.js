@@ -13,7 +13,7 @@ export default {
   },
   actions: {
     async fetch({ commit }) {
-      const settings = await axios.get("/settings");
+      const settings = await axios.get("/api/settings");
       commit(
         "FETCH",
         settings.reduce(
@@ -26,7 +26,7 @@ export default {
       );
     },
     async set({ dispatch }, { key, value }) {
-      await axios.post(`/settings/${key}`, { value });
+      await axios.post(`/api/settings/${key}`, { value });
       await dispatch("fetch");
     }
   }

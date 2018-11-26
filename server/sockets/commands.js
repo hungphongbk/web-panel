@@ -5,7 +5,7 @@ import Setting from "../models/Settings";
 class SocketCommands extends SocketBase {
   constructor(io, socket) {
     super(io, socket);
-    socket.on("execute:restartNginx", this.restartNginx.bind(this));
+    socket.on("executeRestartNginx", this.restartNginx.bind(this));
   }
 
   async restartNginx() {
@@ -15,10 +15,10 @@ class SocketCommands extends SocketBase {
       shell: true
     });
     childProcess.unref();
-    childProcess.stdout.on("data", data =>
-      this.socket.emit("log:restartNginx", { log: data })
+    childProcess.on("message", data =>
+      this.socket.emit("logRestartNginx", { log: data })
     );
-    childProcess.on("close", () => this.socket.emit("endLog:restartNginx"));
+    childProcess.on("close", () => this.socket.emit("endLogRestartNginx"));
   }
 }
 

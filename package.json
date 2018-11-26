@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "nodemon ./server.js",
+    "serve": "BABEL_ENV=browser vue-cli-service serve",
+    "serve:server": "BABEL_ENV=node nodemon ./server.js",
     "start": "babel-node --presets @babel/env ./server.js",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",

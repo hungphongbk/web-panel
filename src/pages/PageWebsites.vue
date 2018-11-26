@@ -3,7 +3,7 @@
         <h2>Websites</h2>
         <hr>
         <div :class="$style.commands">
-            <b-button variant="warning">Restart Nginx</b-button>
+            <b-button variant="warning" @click="restartNginx">Restart Nginx</b-button>
         </div>
     </div>
 </template>
@@ -20,7 +20,17 @@ export default {
   sockets: {
     connect() {
       this.isConnected = true;
-      console.log("ahihi");
+    },
+    logRestartNginx({ log }) {
+      console.log(log);
+    },
+    endLogRestartNginx() {
+      console.log("fuck you");
+    }
+  },
+  methods: {
+    restartNginx() {
+      this.$socket.emit("executeRestartNginx");
     }
   }
 };
