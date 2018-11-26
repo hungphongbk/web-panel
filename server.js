@@ -33,8 +33,12 @@ if (process.env.NODE_ENV === "development") {
 }
 app.use(bodyParser.json());
 app.use("/settings", settings);
+if (process.env.NODE_ENV === "production") {
+  app.use("/", express.static("dist"));
+}
 
-const port = process.env.PORT || 8080;
-app.listen(port, function() {
+const port = process.env.PORT || 8080,
+  host = process.env.HOST || "localhost";
+app.listen(port, host, function() {
   console.log("Developer server running on http://localhost:" + port);
 });

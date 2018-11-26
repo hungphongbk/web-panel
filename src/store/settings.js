@@ -3,7 +3,8 @@ import axios from "axios";
 export default {
   namespaced: true,
   state: () => ({
-    nginxConfDir: ""
+    nginxConfDir: "",
+    nginxRestartCmd: ""
   }),
   mutations: {
     FETCH(state, obj) {
