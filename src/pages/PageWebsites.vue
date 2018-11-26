@@ -13,6 +13,15 @@ export default {
   name: "PageWebsites",
   components: {
     bButton
+  },
+  data: () => ({
+    isConnected: false
+  }),
+  sockets: {
+    connect() {
+      this.isConnected = true;
+      console.log("ahihi");
+    }
   }
 };
 </script>

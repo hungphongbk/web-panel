@@ -1,13 +1,17 @@
 class SocketBase {
   io = null;
   socket = null;
-  static create(io, namespace) {
-    io.of(namespace).on("connection", socket => new this(io, socket));
+  channel = null;
+  static create(io, channel) {
+    io.on("connection", socket => new this(io, socket, channel));
   }
 
-  constructor(io, socket) {
+  constructor(io, socket, channel) {
     this.io = io;
     this.socket = socket;
+    this.channel = channel;
+
+    socket.join(channel);
   }
 }
 

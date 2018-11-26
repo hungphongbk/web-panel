@@ -10,3 +10,16 @@ axios.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+import Vue from "vue";
+import VueSocketIO from "vue-socket.io";
+
+Vue.use(
+  new VueSocketIO({
+    debug: process.env.NODE_ENV === "development",
+    connection:
+      process.env.NODE_ENV === "development"
+        ? "http://localhost:8080"
+        : "http://web-panel.vaithuhay.com:1812"
+  })
+);
