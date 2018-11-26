@@ -37,7 +37,7 @@ module.exports = {
       "post-deploy":
         "yarn install && " +
         "yarn run build && " +
-        "pm2 reload pm2.config.js --env production && ",
+        "pm2 reload pm2.config.js --env production",
       env: {
         NODE_ENV: "production",
         HOST: "web-panel.vaithuhay.com"
@@ -55,7 +55,7 @@ module.exports = {
       repo: "git@github.com:hungphongbk/web-panel.git",
       path: "/root/www/web-panel",
       "post-deploy":
-        "pm2 reload pm2.config.js --env production && ",
+        "pm2 reload pm2.config.js --env production",
       env: {
         NODE_ENV: "production",
         HOST: "web-panel.vaithuhay.com"
