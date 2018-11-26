@@ -5,7 +5,8 @@
   "scripts": {
     "serve": "nodemon ./server.js",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "deploy": "pm2 deploy pm2.config.js production"
   },
   "dependencies": {
     "@babel/register": "^7.0.0",
