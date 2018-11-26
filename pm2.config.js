@@ -11,6 +11,7 @@ module.exports = {
       watch: false,
       // max_memory_restart: '1G',
       env_production: {
+        BABEL_ENV: "server",
         NODE_ENV: "production",
         PORT: "1812"
       },

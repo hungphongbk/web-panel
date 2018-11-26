@@ -2,7 +2,7 @@
 
   "verbose": true,
   "execMap": {
-    "js": "babel-node --presets @babel/env"
+    "js": "BABEL_ENV=server babel-node"
   },
   "env": {
     "NODE_ENV": "development"

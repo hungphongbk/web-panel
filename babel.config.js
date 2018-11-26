@@ -1,5 +1,9 @@
-module.exports = {
-  presets: [
-    '@vue/app'
-  ]
-}
+module.exports =
+  process.env.BABEL_ENV === "server"
+    ? {
+        presets: ["@babel/preset-env"],
+        plugins: ["@babel/plugin-proposal-class-properties"]
+      }
+    : {
+        presets: ["@vue/app"]
+      };
