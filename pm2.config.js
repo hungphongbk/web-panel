@@ -30,6 +30,7 @@ module.exports = {
           port: "2234"
         }
       ],
+      ssh_options: "StrictHostKeyChecking=no",
       ref: "origin/master",
       repo: "git@github.com:hungphongbk/web-panel.git",
       path: "/root/www/web-panel/current",
