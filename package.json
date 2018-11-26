@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "nodemon ./server.js",
+    "start": "babel-node --presets @babel/env ./server.js",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "deploy": "pm2 deploy pm2.config.js production"

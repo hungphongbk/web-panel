@@ -5,7 +5,7 @@ module.exports = {
       script: "yarn",
 
       // Options reference: https://pm2.io/doc/en/runtime/reference/ecosystem-file/
-      args: "serve",
+      args: "start",
       // instances: 1,
       autorestart: true,
       watch: false,
