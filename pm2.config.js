@@ -2,7 +2,7 @@ module.exports = {
   apps: [
     {
       name: "web-panel",
-      script: "npm",
+      script: "yarn",
 
       // Options reference: https://pm2.io/doc/en/runtime/reference/ecosystem-file/
       args: "start",
@@ -33,7 +33,7 @@ module.exports = {
       ssh_options: "StrictHostKeyChecking=no",
       ref: "origin/master",
       repo: "git@github.com:hungphongbk/web-panel.git",
-      path: "/root/www/web-panel/current",
+      path: "/root/www/web-panel",
       "post-deploy":
         "yarn install && " +
         "yarn run build && " +
