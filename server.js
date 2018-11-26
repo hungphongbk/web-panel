@@ -40,5 +40,7 @@ if (process.env.NODE_ENV === "production") {
 const port = process.env.PORT || 8080,
   host = process.env.HOST || "localhost";
 app.listen(port, host, function() {
-  console.log("Developer server running on http://localhost:" + port);
+  console.log(
+    `${process.env.NODE_ENV} server running on http://${host}:${port}`
+  );
 });
