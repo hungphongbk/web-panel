@@ -8,7 +8,11 @@
       <div :class="$style.sidebar">
         <ul>
           <li><router-link to="/websites">Websites + Nginx</router-link></li>
+          <li><router-link to="/settings">Settings</router-link></li>
         </ul>
+      </div>
+      <div :class="$style.content">
+        <router-view></router-view>
       </div>
     </main>
   </div>
@@ -25,6 +29,10 @@ export default {
     bNavbar,
     bNavbarToggle,
     bNavbarBrand
+  },
+  beforeMount(){
+    // noinspection JSIgnoredPromiseFromCall
+    this.$store.dispatch('settings/fetch')
   }
 };
 </script>
@@ -69,6 +77,13 @@ body,
     &:hover {
       background: rgba(#fff, 0.12);
     }
+  }
+}
+.content {
+  padding: 0.7rem 1.3rem;
+  flex-grow: 1;
+  hr {
+    display: block;
   }
 }
 </style>

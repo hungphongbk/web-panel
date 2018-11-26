@@ -4,6 +4,9 @@
 import webpackConfig from "@vue/cli-service/webpack.config.js";
 // Create express app
 import express from "express";
+import bodyParser from "body-parser";
+import "./server/bootstrap";
+import settings from "./server/routes/settings";
 const app = express();
 import webpack from "webpack";
 import devMiddleware from "webpack-dev-middleware"; // eslint-disable-line
@@ -28,6 +31,8 @@ if (process.env.NODE_ENV === "development") {
     })
   );
 }
+app.use(bodyParser.json());
+app.use("/settings", settings);
 
 const port = process.env.PORT || 8080;
 app.listen(port, function() {

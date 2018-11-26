@@ -9,17 +9,23 @@
   },
   "dependencies": {
     "@babel/register": "^7.0.0",
+    "axios": "^0.18.0",
+    "body-parser": "^1.18.3",
     "bootstrap-vue": "latest",
     "express": "latest",
+    "mongoose": "^5.3.13",
     "node-sass": "^4.10.0",
     "sass-loader": "^7.1.0",
     "vue": "^2.5.17",
     "vue-router": "^3.0.2",
+    "vuex": "^3.0.1",
     "webpack": "latest",
     "webpack-dev-middleware": "latest",
-    "webpack-hot-middleware": "^2.24.3"
+    "webpack-hot-middleware": "^2.24.3",
+    "lodash": "latest"
   },
   "devDependencies": {
+    "@types/mongoose": "^5.3.1",
     "@vue/cli-plugin-babel": "^3.1.1",
     "@vue/cli-plugin-eslint": "^3.1.5",
     "@vue/cli-service": "^3.1.4",
