@@ -9,9 +9,12 @@ import "./server/bootstrap";
 import settings from "./server/routes/settings";
 const app = express();
 import webpack from "webpack";
-import devMiddleware from "webpack-dev-middleware"; // eslint-disable-line
+import vhost from "vhost";
+import devMiddleware from "webpack-dev-middleware";
+import hotMiddleware from "webpack-hot-middleware";
 
-import hotMiddleware from "webpack-hot-middleware"; // eslint-disable-line
+const port = process.env.PORT || 8080,
+  host = process.env.HOST || "localhost";
 
 // Configure webpack as middleware
 if (process.env.NODE_ENV === "development") {
@@ -37,9 +40,10 @@ if (process.env.NODE_ENV === "production") {
   app.use("/", express.static("dist"));
 }
 
-const port = process.env.PORT || 8080,
-  host = process.env.HOST || "localhost";
-app.listen(port, host, function() {
+const genericApp = express();
+genericApp.use(vhost(host, app));
+
+genericApp.listen(port, function() {
   console.log(
     `${process.env.NODE_ENV} server running on http://${host}:${port}`
   );
