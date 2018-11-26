@@ -1,28 +1,74 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div id="app" :class="$style.app">
+    <b-navbar toggleable="sm" type="dark" variant="info">
+      <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
+      <b-navbar-brand href="#">WebPanel</b-navbar-brand>
+    </b-navbar>
+    <main :class="$style.container">
+      <div :class="$style.sidebar">
+        <ul>
+          <li><router-link to="/websites">Websites + Nginx</router-link></li>
+        </ul>
+      </div>
+    </main>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import bNavbar from "bootstrap-vue/es/components/navbar/navbar";
+import bNavbarToggle from "bootstrap-vue/es/components/navbar/navbar-toggle";
+import bNavbarBrand from "bootstrap-vue/es/components/navbar/navbar-brand";
 
 export default {
-  name: 'app',
+  name: "app",
   components: {
-    HelloWorld
+    bNavbar,
+    bNavbarToggle,
+    bNavbarBrand
   }
-}
+};
 </script>
-
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+<style lang="scss" module>
+.app,
+.container {
+  composes: d-flex from global;
+}
+.app {
+  composes: flex-column from global;
+}
+html,
+body,
+.app {
+  width: 100%;
+  height: 100%;
+}
+.container {
+  flex-grow: 1;
+}
+.sidebar {
+  width: 250px;
+  background: var(--gray-dark);
+  color: white;
+}
+.sidebar ul {
+  list-style: none;
+  padding-inline-start: 0;
+  li a {
+    &,
+    &:hover,
+    &:active {
+      color: inherit;
+      text-decoration: inherit;
+    }
+    display: block;
+    padding: {
+      top: 0.7rem;
+      bottom: 0.7rem;
+      left: 1.3rem;
+    }
+    &:hover {
+      background: rgba(#fff, 0.12);
+    }
+  }
 }
 </style>

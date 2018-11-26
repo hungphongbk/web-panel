@@ -3,12 +3,21 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "serve": "nodemon ./server.js",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "vue": "^2.5.17"
+    "@babel/register": "^7.0.0",
+    "bootstrap-vue": "latest",
+    "express": "latest",
+    "node-sass": "^4.10.0",
+    "sass-loader": "^7.1.0",
+    "vue": "^2.5.17",
+    "vue-router": "^3.0.2",
+    "webpack": "latest",
+    "webpack-dev-middleware": "latest",
+    "webpack-hot-middleware": "^2.24.3"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.1.1",
@@ -28,7 +37,9 @@
       "plugin:vue/essential",
       "eslint:recommended"
     ],
-    "rules": {},
+    "rules": {
+      "no-console": "off"
+    },
     "parserOptions": {
       "parser": "babel-eslint"
     }
