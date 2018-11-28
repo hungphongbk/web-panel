@@ -37,7 +37,7 @@ module.exports = {
       path: "/root/www/web-panel",
       "post-deploy":
         "npm install && " +
-        "npm run build && " +
+        "BABEL_ENV=browser npm run build && " +
         "pm2 reload pm2.config.js --env production",
       env: {
         NODE_ENV: "production",
