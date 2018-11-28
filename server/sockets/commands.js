@@ -1,7 +1,7 @@
 import SocketBase from "./SocketBase";
 import { spawn } from "child_process";
 import Setting from "../models/Settings";
-import {ab2str} from "../../universal/utils";
+import { ab2str } from "../../universal/utils";
 
 class SocketCommands extends SocketBase {
   constructor(io, socket) {
@@ -20,6 +20,8 @@ class SocketCommands extends SocketBase {
     });
     childProcess.on("close", () => this.socket.emit("endLogRestartNginx"));
   }
+
+  async createWordpressSite({ domain, dbUser, dbPassword, dbName }) {}
 }
 
 export default SocketCommands;

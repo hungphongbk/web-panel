@@ -10,6 +10,7 @@
           <li><router-link to="/websites">Websites + Nginx</router-link></li>
           <li><router-link to="/settings">Settings</router-link></li>
           <li><router-link to="/ssh">SSH Access Keys</router-link></li>
+          <li><router-link to="/create/wordpress">Create new Wordpress site</router-link></li>
         </ul>
       </div>
       <div :class="$style.content">

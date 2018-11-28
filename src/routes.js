@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import PageWebsites from "./pages/PageWebsites";
 import PageSettings from "./pages/PageSettings";
 import PageSSHAccessKey from "./pages/PageSSHAccessKey";
+import PageWordpressSites from "./pages/PageWordpressSites";
 
 Vue.use(VueRouter);
 
@@ -19,6 +20,10 @@ const routes = [
   {
     path: "/ssh",
     component: PageSSHAccessKey
+  },
+  {
+    path: "/create/wordpress",
+    component: PageWordpressSites
   }
 ];
 
