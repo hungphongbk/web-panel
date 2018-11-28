@@ -16,7 +16,8 @@ import VueSocketIO from "vue-socket.io";
 
 Vue.use(
   new VueSocketIO({
-    debug: process.env.NODE_ENV === "development",
+    // debug: process.env.NODE_ENV === "development",
+    debug: true,
     connection:
       process.env.NODE_ENV === "development"
         ? "http://localhost:8081"
