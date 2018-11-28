@@ -19,8 +19,15 @@
             </b-tabs>
             <b-button variant="primary" @click="save">Save settings</b-button>
         </b-form>
-        <b-modal ref="addUserModal">
-            Ahihi
+        <b-modal ref="addUserModal" title="Add new user">
+            <b-form>
+                <b-form-group label="User Name (required)">
+                    <b-form-input v-model="currentUser.userName"></b-form-input>
+                </b-form-group>
+                <b-form-group label="Directory (required)">
+                    <b-form-input v-model="currentUser.homeDir"></b-form-input>
+                </b-form-group>
+            </b-form>
         </b-modal>
     </div>
 </template>
@@ -40,6 +47,10 @@ export default {
       nginxConfDir: "",
       nginxRestartCmd: "",
       users: []
+    },
+    currentUser: {
+      userName: "",
+      homeDir: ""
     }
   }),
   methods: {
