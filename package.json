@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "serve": "BABEL_ENV=browser vue-cli-service serve",
-    "serve:server": "BABEL_ENV=node nodemon ./server.js",
-    "start": "babel-node --presets @babel/env ./server.js",
-    "build": "vue-cli-service build",
+    "serve:server": "nodemon ./server.js",
+    "start": "BABEL_ENV=node babel-node ./server.js",
+    "build": "BABEL_ENV=browser vue-cli-service build",
     "lint": "vue-cli-service lint",
     "deploy": "pm2 deploy pm2.config.js production",
     "deploy-reload": "pm2 deploy pm2.config.js production-reload"
