@@ -24,3 +24,7 @@ Vue.use(
         : "http://web-panel.vaithuhay.com:1812"
   })
 );
+
+import { Modal, Table } from "bootstrap-vue/es/components";
+Vue.use(Modal);
+Vue.use(Table);

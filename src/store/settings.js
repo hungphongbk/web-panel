@@ -4,7 +4,8 @@ export default {
   namespaced: true,
   state: () => ({
     nginxConfDir: "",
-    nginxRestartCmd: ""
+    nginxRestartCmd: "",
+    users: []
   }),
   mutations: {
     FETCH(state, obj) {
