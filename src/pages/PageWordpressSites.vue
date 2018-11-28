@@ -10,7 +10,7 @@
                 <b-form-input v-model="form.dbName"></b-form-input>
             </b-form-group>
         </b-form>
-        <b-button>Install now!</b-button>
+        <b-button @click="create">Install now!</b-button>
     </div>
 </template>
 
@@ -31,7 +31,13 @@ export default {
     }
   }),
   sockets: {
-    connect() {}
+    connect() {},
+    createWordpressSiteLog() {}
+  },
+  methods: {
+    create() {
+      this.$socket.emit("createWordpressSite", this.form);
+    }
   }
 };
 </script>

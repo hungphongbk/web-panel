@@ -33,6 +33,7 @@
     "express": "latest",
     "lodash": "latest",
     "mongoose": "^5.3.13",
+    "mustache": "^3.0.1",
     "node-sass": "^4.10.0",
     "sass-loader": "^7.1.0",
     "socket.io": "^2.1.1",

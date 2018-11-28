@@ -2,11 +2,14 @@ import SocketBase from "./SocketBase";
 import { spawn } from "child_process";
 import Setting from "../models/Settings";
 import { ab2str } from "../../universal/utils";
+import Mustache from "mustache";
+import { getTemplateFile } from "../helpers";
 
 class SocketCommands extends SocketBase {
   constructor(io, socket) {
     super(io, socket);
     socket.on("executeRestartNginx", this.executeRestartNginx.bind(this));
+    socket.on("createWordpressSite", this.createWordpressSite.bind(this));
   }
 
   async executeRestartNginx() {
@@ -21,7 +24,14 @@ class SocketCommands extends SocketBase {
     childProcess.on("close", () => this.socket.emit("endLogRestartNginx"));
   }
 
-  async createWordpressSite({ domain, dbUser, dbPassword, dbName }) {}
+  async createWordpressSite({ domain, dbUser, dbPassword, dbName }) {
+    // construct nginx config
+    const nginxConfig = Mustache.render(
+      getTemplateFile("wordpress-nginx.conf.mustache"),
+      { domain, ssl: false }
+    );
+    this.socket.emit("createWordpressSiteLog", { nginxConfig });
+  }
 }
 
 export default SocketCommands;
