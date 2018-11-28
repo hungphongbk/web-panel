@@ -12,10 +12,10 @@ import SocketIO from "socket.io";
 import SocketCommands from "./sockets/commands";
 
 const app = express(),
-  _app = new Server(app),
-  io = SocketIO(_app);
+  httpApp = new Server(app),
+  io = SocketIO(httpApp);
 // import webpack from "webpack";
-import vhost from "vhost";
+// import vhost from "vhost";
 // import devMiddleware from "webpack-dev-middleware";
 // import hotMiddleware from "webpack-hot-middleware";
 
@@ -49,11 +49,8 @@ if (process.env.NODE_ENV === "production") {
 // SET-UP SOCKET IO
 SocketCommands.create(io, "commands");
 
-const genericApp = express();
-genericApp.use(vhost(host, app));
-
 // TODO
-_app.listen(port, function() {
+httpApp.listen(port, function() {
   console.log(
     `${process.env.NODE_ENV} server running on http://${host}:${port}`
   );

@@ -25,8 +25,13 @@ export default {
         )
       );
     },
-    async set({ dispatch }, { key, value }) {
-      await axios.post(`/api/settings/${key}`, { value });
+    async set({ dispatch }, settings) {
+      // await axios.post(`/api/settings/${key}`, { value });
+      await Promise.all(
+        Object.entries(settings).map(([key, value]) =>
+          axios.post(`/api/settings/${key}`, { value })
+        )
+      );
       await dispatch("fetch");
     }
   }
