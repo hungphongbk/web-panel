@@ -36,6 +36,7 @@ module.exports = {
       repo: "git@github.com:hungphongbk/web-panel.git",
       path: "/root/www/web-panel",
       "post-deploy":
+        "rm package-lock.json && rm -rf ./node_modules " +
         "npm install && " +
         "npm run build && " +
         "pm2 reload pm2.config.js --env production",
