@@ -1,0 +1,6 @@
+Server:		{{dnsServer}}
+Address:	{{dnsServerAddr}}
+
+{{#found}}Non-authoritative answer:
+Name:	{{domain}}
+Address: {{ipAddr}}{{/found}}{{^found}}** server can't find {{_$0}}{{/found}}

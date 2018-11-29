@@ -1,3 +1,5 @@
+import reverseMustache from "reverse-mustache";
+
 import SocketBase from "./SocketBase";
 import { spawn } from "child_process";
 import Setting from "../models/Settings";
@@ -31,15 +33,26 @@ const executeCommand = (target, prop, descriptor) => {
 class SocketCommands extends SocketBase {
   constructor(io, socket) {
     super(io, socket);
-    socket.on("executeRestartNginx", this.executeRestartNginx.bind(this));
-    socket.on("createWordpressSite", this.createWordpressSite.bind(this));
+    ["executeRestartNginx", "createWordpressSite", "checkDomain"].forEach(
+      methodName => socket.on(methodName, this[methodName].bind(this))
+    );
+  }
+
+  _shellCommand(cmd, onData) {
+    return new Promise(resolve => {
+      const childProcess = spawn(cmd + " 2>&1", {
+        stdio: "pipe",
+        shell: true
+      });
+      childProcess.stdout.on("data", onData);
+      childProcess.on("close", resolve);
+    });
   }
 
   @executeCommand
   async executeRestartNginx(logger) {
     const { value: cmd } = await Setting.findOne({ key: "nginxRestartCmd" });
     await new Promise(resolve => {
-      console.log("execute");
       const childProcess = spawn(cmd + " 2>&1", {
         stdio: "pipe",
         shell: true
@@ -51,6 +64,7 @@ class SocketCommands extends SocketBase {
     });
   }
 
+  // TODO
   async createWordpressSite({ domain, dbUser, dbPassword, dbName }) {
     // construct nginx config
     const nginxConfig = Mustache.render(
@@ -58,6 +72,22 @@ class SocketCommands extends SocketBase {
       { domain, ssl: false }
     );
     this.socket.emit("createWordpressSiteLog", { nginxConfig });
+  }
+
+  async checkDomain({ domain }) {
+    let content = "",
+      template = getTemplateFile("nslookup.mustache");
+    await this._shellCommand(
+      `nslookup ${domain} 8.8.8.8`,
+      data => (content += data)
+    );
+    content = content.trim();
+
+    const parsedData = reverseMustache({
+      template,
+      content
+    });
+    this.socket.emit("checkDomainResponse", parsedData);
   }
 }
 

@@ -26,6 +26,7 @@ Vue.use(
   { store }
 );
 
-import { Modal, Table } from "bootstrap-vue/es/components";
+import { Modal, Table, Button } from "bootstrap-vue/es/components";
 Vue.use(Modal);
 Vue.use(Table);
+Vue.use(Button);
