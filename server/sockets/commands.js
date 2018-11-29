@@ -100,7 +100,22 @@ class SocketCommands extends SocketBase {
     // 1. Create folder
     const homeDir = await this._homeDir(),
       wpHomeDir = path.join(homeDir, "www", domain);
+
+    // NOTE - for testing only, remove wpHomeDir if exists
+    if (process.env.NODE_ENV === "development" && fs.existsSync(wpHomeDir))
+      fs.rmdirSync(wpHomeDir);
     fs.mkdirSync(wpHomeDir, { recursive: true, mode: 0o644 });
+
+    // 2. Execute wp commands
+    const commands = [
+      `wp core download`,
+      `wp config create --dbname=${dbName} --dbuser=${dbUser} --dbpass=${dbPassword}`
+    ];
+    for (const command of commands) {
+      await this._shellCommand(command, log => logger({ log }), {
+        cwd: wpHomeDir
+      });
+    }
   }
 
   async checkDomain({ domain }) {
