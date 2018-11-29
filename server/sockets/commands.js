@@ -1,3 +1,5 @@
+import path from "path";
+import fs from "fs";
 import reverseMustache from "reverse-mustache";
 
 import SocketBase from "./SocketBase";
@@ -11,6 +13,7 @@ import {
   SOCKET_EVENT_TERMINAL_LOG,
   SOCKET_EVENT_TERMINAL_OPEN
 } from "../../universal/consts";
+import WpSite from "../models/WpSites";
 
 const executeCommand = (target, prop, descriptor) => {
   let { value: fn } = descriptor;
@@ -38,13 +41,25 @@ class SocketCommands extends SocketBase {
     );
   }
 
-  _shellCommand(cmd, onData) {
+  _homeDir(uid = undefined) {
+    let homeDir = "";
+    return this._shellCommand(
+      "echo $HOME",
+      data => {
+        homeDir = data;
+      },
+      uid ? { uid } : {}
+    ).then(() => homeDir.trim());
+  }
+
+  _shellCommand(cmd, onData = () => {}, processOpts = {}) {
     return new Promise(resolve => {
       const childProcess = spawn(cmd + " 2>&1", {
         stdio: "pipe",
-        shell: true
+        shell: true,
+        ...processOpts
       });
-      childProcess.stdout.on("data", onData);
+      childProcess.stdout.on("data", data => onData(ab2str(data)));
       childProcess.on("close", resolve);
     });
   }
@@ -58,20 +73,34 @@ class SocketCommands extends SocketBase {
         shell: true
       });
       childProcess.stdout.on("data", data => {
-        logger({ log: ab2str(data) });
+        logger({ log: data });
       });
       childProcess.on("close", resolve);
     });
   }
 
-  // TODO
-  async createWordpressSite({ domain, dbUser, dbPassword, dbName }) {
+  @executeCommand
+  async createWordpressSite(logger, { domain, dbUser, dbPassword, dbName }) {
     // construct nginx config
-    const nginxConfig = Mustache.render(
+    const wpSite = new WpSite({ domain, dbName, dbUser, dbPassword });
+    const { value: nginxConfDir } = await Setting.findOne({
+      key: "nginxConfDir"
+    });
+    //generate nginx conf path
+    wpSite.nginxConfFile = path.join(nginxConfDir, `${dbName}.conf`);
+    await wpSite.save();
+    const nginxConfigContent = Mustache.render(
       getTemplateFile("wordpress-nginx.conf.mustache"),
-      { domain, ssl: false }
+      wpSite.toJSON()
     );
-    this.socket.emit("createWordpressSiteLog", { nginxConfig });
+
+    // write nginx config into
+
+    // scaffold wordpress folder
+    // 1. Create folder
+    const homeDir = await this._homeDir(),
+      wpHomeDir = path.join(homeDir, "www", domain);
+    fs.mkdirSync(wpHomeDir, { recursive: true, mode: 0o644 });
   }
 
   async checkDomain({ domain }) {

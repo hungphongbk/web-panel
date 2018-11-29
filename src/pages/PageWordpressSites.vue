@@ -3,9 +3,7 @@
         <h2>Create new Wordpress Site</h2>
         <hr>
         <b-form>
-            <b-form-group label="Specify an existing domain (required)">
-                <domain-input v-model="form.domain"></domain-input>
-            </b-form-group>
+            <domain-input v-model="form.domain"></domain-input>
             <b-form-group label="Enter MySQL Database name (required)">
                 <b-form-input v-model="form.dbName"></b-form-input>
             </b-form-group>
@@ -21,7 +19,7 @@ import bFormInput from "bootstrap-vue/es/components/form-input/form-input";
 import bButton from "bootstrap-vue/es/components/button/button";
 import DomainInput from "../components/DomainInput";
 export default {
-  components: {DomainInput, bForm, bFormGroup, bFormInput, bButton },
+  components: { DomainInput, bForm, bFormGroup, bFormInput, bButton },
   name: "PageWordpressSites",
   data: () => ({
     form: {

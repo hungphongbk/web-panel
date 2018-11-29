@@ -1,21 +1,30 @@
 <template>
-    <b-input-group>
-        <b-form-input v-model="domain$"></b-form-input>
-        <b-input-group-append>
-            <b-btn :variant="checkVariant" @click="checkDomain">Check DNS</b-btn>
-        </b-input-group-append>
-    </b-input-group>
+    <b-form-group label="Specify an existing domain (required)" description="Make sure your domain has been pointed to IP 188.166.177.127 :)">
+        <b-input-group>
+            <b-form-input v-model="domain$"></b-form-input>
+            <b-input-group-append>
+                <b-btn :variant="checkVariant" @click="checkDomain">Check DNS</b-btn>
+            </b-input-group-append>
+        </b-input-group>
+    </b-form-group>
 </template>
 <script>
+import bFormGroup from "bootstrap-vue/es/components/form-group/form-group";
 import bFormInput from "bootstrap-vue/es/components/form-input/form-input";
 import bInputGroup from "bootstrap-vue/es/components/input-group/input-group";
 import bInputGroupAppend from "bootstrap-vue/es/components/input-group/input-group-append";
 
 export default {
   name: "DomainInput",
-  components: { bFormInput, bInputGroup, bInputGroupAppend },
+  components: {
+    bFormGroup,
+    bFormInput,
+    bInputGroup,
+    bInputGroupAppend
+  },
   model: {
-    prop: "domain"
+    prop: "domain",
+    event: "change"
   },
   props: {
     domain: { type: String, required: true }
@@ -48,7 +57,7 @@ export default {
       const ipAddr = found.ipAddr.trim();
       if (ipAddr === "188.166.177.127") {
         this.valid = 1;
-        this.$emit("change", ipAddr);
+        this.$emit("change", found.domain);
       } else {
         this.valid = -1;
       }
