@@ -32,6 +32,7 @@ export default {
 .container {
   background: rgba(#000, 0.82);
   padding: 0.5rem;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
   p {
     color: white;
     font-family: Inconsolata, monospace;

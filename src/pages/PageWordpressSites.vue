@@ -8,7 +8,7 @@
                 <b-form-input v-model="form.dbName"></b-form-input>
             </b-form-group>
         </b-form>
-        <b-button @click="create">Install now!</b-button>
+        <b-button :disabled="!form.domain || status===1" @click="create">{{statusLabel}}</b-button>
     </div>
 </template>
 
@@ -18,6 +18,7 @@ import bFormGroup from "bootstrap-vue/es/components/form-group/form-group";
 import bFormInput from "bootstrap-vue/es/components/form-input/form-input";
 import bButton from "bootstrap-vue/es/components/button/button";
 import DomainInput from "../components/DomainInput";
+import { SOCKET_EVENT_TERMINAL_CLOSE } from "../../universal/consts";
 export default {
   components: { DomainInput, bForm, bFormGroup, bFormInput, bButton },
   name: "PageWordpressSites",
@@ -27,15 +28,29 @@ export default {
       dbUser: "myowngrave",
       dbPassword: "dxq7tpTIOeELw2zs",
       dbName: ""
-    }
+    },
+    status: 0
   }),
+  computed: {
+    statusLabel() {
+      return [
+        "Install now!",
+        "Installing...",
+        "Done. Return to Websites list!"
+      ][this.status];
+    }
+  },
   sockets: {
     connect() {},
-    createWordpressSiteLog() {}
+    [SOCKET_EVENT_TERMINAL_CLOSE]() {
+      console.log("completed");
+      this.status = 2;
+    }
   },
   methods: {
     create() {
       this.$socket.emit("createWordpressSite", this.form);
+      this.status = 1;
     }
   }
 };
