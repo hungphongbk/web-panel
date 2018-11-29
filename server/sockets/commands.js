@@ -122,7 +122,7 @@ class SocketCommands extends SocketBase {
     const uid = await this._uid(dbUser);
     console.log(`${dbUser} has uid = ${uid}`);
     console.log(`Path of wp is`);
-    console.log(await this._shellCommandAsync("which wp", { uid }));
+    console.log(await this._shellCommandAsync("which wp", { uid })());
 
     // construct nginx config
     const wpSite = new WpSite({ domain, dbName, dbUser, dbPassword });
