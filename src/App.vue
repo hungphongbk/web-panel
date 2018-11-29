@@ -17,7 +17,7 @@
         <router-view></router-view>
       </div>
       <div :class="$style.terminals">
-        <terminal-log/>
+        <terminal-log command="createWordpressSite"/>
       </div>
     </main>
   </div>

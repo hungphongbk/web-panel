@@ -1,10 +1,12 @@
 export default {
   state: () => ({
     terminalWindows: {
-      executeRestartNginx: false
+      executeRestartNginx: false,
+      createWordpressSite: false
     },
     logs: {
-      executeRestartNginx: []
+      executeRestartNginx: [],
+      createWordpressSite: []
     }
   }),
   mutations: {
@@ -12,8 +14,8 @@ export default {
       state.terminalWindows[eventName] = true;
       state.logs[eventName] = [];
     },
-    SOCKET_TERMINALLOG(state, { eventName, log }) {
-      state.logs[eventName].push(log);
+    SOCKET_TERMINALLOG(state, { eventName, ...rest }) {
+      state.logs[eventName].push(rest);
     },
     SOCKET_TERMINALCLOSE() {
       // state.terminalWindows[eventName] = false;

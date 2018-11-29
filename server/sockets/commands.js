@@ -44,6 +44,26 @@ class SocketCommands extends SocketBase {
     );
   }
 
+  /**
+   * Get UID of specific user
+   *
+   * @param username
+   * @returns {Promise<number>}
+   * @private
+   */
+  _uid(username) {
+    let uid = "";
+    return this._shellCommand(`id -u ${username}`, data => (uid = data))().then(
+      () => uid.trim() * 1
+    );
+  }
+
+  /**
+   * Get Home Directory of user with specific UID
+   * @param uid
+   * @returns {Promise<string>}
+   * @private
+   */
   _homeDir(uid = undefined) {
     let homeDir = "";
     return this._shellCommand(
@@ -52,19 +72,21 @@ class SocketCommands extends SocketBase {
         homeDir = data;
       },
       uid ? { uid } : {}
-    ).then(() => homeDir.trim());
+    )().then(() => homeDir.trim());
   }
 
   _shellCommand(cmd, onData = () => {}, processOpts = {}) {
-    return new Promise(resolve => {
-      const childProcess = spawn(cmd + " 2>&1", {
-        stdio: "pipe",
-        shell: true,
-        ...processOpts
+    return (logger = null) =>
+      new Promise(resolve => {
+        logger && logger({ cmd });
+        const childProcess = spawn(cmd + " 2>&1", {
+          stdio: "pipe",
+          shell: true,
+          ...processOpts
+        });
+        childProcess.stdout.on("data", data => onData(ab2str(data)));
+        childProcess.on("close", resolve);
       });
-      childProcess.stdout.on("data", data => onData(ab2str(data)));
-      childProcess.on("close", resolve);
-    });
   }
 
   @executeCommand
@@ -84,6 +106,8 @@ class SocketCommands extends SocketBase {
 
   @executeCommand
   async createWordpressSite(logger, { domain, dbUser, dbPassword, dbName }) {
+    const uid = await this._uid(dbUser);
+
     // construct nginx config
     const wpSite = new WpSite({ domain, dbName, dbUser, dbPassword });
     const { value: nginxConfDir } = await Setting.findOne({
@@ -98,18 +122,25 @@ class SocketCommands extends SocketBase {
     );
 
     // write nginx config into
+    fs.writeFileSync(wpSite.nginxConfFile, nginxConfigContent);
 
     // scaffold wordpress folder
     // 1. Create folder
-    const homeDir = await this._homeDir(),
+    const homeDir = await this._homeDir(uid),
       wpHomeDir = path.join(homeDir, "www", domain);
 
     // NOTE - for testing only, remove wpHomeDir if exists
     if (process.env.NODE_ENV === "development" && fs.existsSync(wpHomeDir))
-      fs.rmdirSync(wpHomeDir);
-    fs.mkdirSync(wpHomeDir, { recursive: true, mode: 0o644 });
+      await this._shellCommand(`rm -rf ${wpHomeDir}`, () => {}, { uid })(
+        logger
+      );
+    await this._shellCommand(
+      `mkdir -p ${wpHomeDir}; chmod ${wpHomeDir} 644`,
+      () => {},
+      { uid }
+    )(logger);
 
-    // 2. Execute wp commands
+    // 2. Execute wp commands (with dbUser permission)
     const commands = [
       `wp core download`,
       `wp config create --dbname='${dbUser}_${dbName}' --dbuser=${dbUser} --dbpass=${dbPassword} --dbhost=${
@@ -119,8 +150,9 @@ class SocketCommands extends SocketBase {
     ];
     for (const command of commands) {
       await this._shellCommand(command, log => logger({ log }), {
-        cwd: wpHomeDir
-      });
+        cwd: wpHomeDir,
+        uid
+      })(logger);
     }
   }
 
@@ -130,7 +162,7 @@ class SocketCommands extends SocketBase {
     await this._shellCommand(
       `nslookup ${domain} 8.8.8.8`,
       data => (content += data)
-    );
+    )();
     content = content.trim();
 
     const parsedData = reverseMustache({
