@@ -75,7 +75,12 @@ class SocketCommands extends SocketBase {
     )().then(() => homeDir.trim());
   }
 
-  _shellCommand(cmd, onData = () => {}, processOpts = {}) {
+  _shellCommand(cmd, onData = () => {}, _processOpts = {}) {
+    const processOpts = Object.assign(
+      {},
+      { cwd: undefined, env: process.env },
+      _processOpts
+    );
     return (logger = null) =>
       new Promise(resolve => {
         logger && logger({ cmd });
