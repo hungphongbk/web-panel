@@ -1,4 +1,5 @@
 import axios from "axios";
+import store from "./store";
 
 axios.interceptors.response.use(
   function({ data }) {
@@ -12,17 +13,17 @@ axios.interceptors.response.use(
 );
 
 import Vue from "vue";
-import VueSocketIO from "vue-socket.io";
+import VueSocketIO from "vue-socket.io-extended";
+import io from "socket.io-client";
 
 Vue.use(
-  new VueSocketIO({
-    // debug: process.env.NODE_ENV === "development",
-    debug: true,
-    connection:
-      process.env.NODE_ENV === "development"
-        ? "http://localhost:8081"
-        : "http://web-panel.vaithuhay.com:1812"
-  })
+  VueSocketIO,
+  io(
+    process.env.NODE_ENV === "development"
+      ? "http://localhost:8081"
+      : "http://web-panel.vaithuhay.com:1812"
+  ),
+  { store }
 );
 
 import { Modal, Table } from "bootstrap-vue/es/components";

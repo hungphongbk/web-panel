@@ -20,12 +20,6 @@ export default {
   sockets: {
     connect() {
       this.isConnected = true;
-    },
-    logRestartNginx({ log }) {
-      console.log(log);
-    },
-    endLogRestartNginx() {
-      console.log("fuck you");
     }
   },
   methods: {

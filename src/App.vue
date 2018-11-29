@@ -16,6 +16,9 @@
       <div :class="$style.content">
         <router-view></router-view>
       </div>
+      <div :class="$style.terminals">
+        <terminal-log/>
+      </div>
     </main>
   </div>
 </template>
@@ -24,17 +27,19 @@
 import bNavbar from "bootstrap-vue/es/components/navbar/navbar";
 import bNavbarToggle from "bootstrap-vue/es/components/navbar/navbar-toggle";
 import bNavbarBrand from "bootstrap-vue/es/components/navbar/navbar-brand";
+import TerminalLog from "./components/TerminalLog";
 
 export default {
   name: "app",
   components: {
+    TerminalLog,
     bNavbar,
     bNavbarToggle,
     bNavbarBrand
   },
-  beforeMount(){
+  beforeMount() {
     // noinspection JSIgnoredPromiseFromCall
-    this.$store.dispatch('settings/fetch')
+    this.$store.dispatch("settings/fetch");
   }
 };
 </script>
@@ -54,6 +59,13 @@ body,
 }
 .container {
   flex-grow: 1;
+  position: relative;
+  .terminals {
+    position: absolute;
+    width: 465px;
+    bottom: 1rem;
+    right: 1rem;
+  }
 }
 .sidebar {
   width: 250px;
