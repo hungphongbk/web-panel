@@ -107,6 +107,7 @@ class SocketCommands extends SocketBase {
   @executeCommand
   async createWordpressSite(logger, { domain, dbUser, dbPassword, dbName }) {
     const uid = await this._uid(dbUser);
+    console.log(`${dbUser} has uid = ${uid}`);
 
     // construct nginx config
     const wpSite = new WpSite({ domain, dbName, dbUser, dbPassword });
