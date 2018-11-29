@@ -121,8 +121,6 @@ class SocketCommands extends SocketBase {
   async createWordpressSite(logger, { domain, dbUser, dbPassword, dbName }) {
     const uid = await this._uid(dbUser);
     console.log(`${dbUser} has uid = ${uid}`);
-    console.log(`Path of wp is`);
-    console.log(await this._shellCommandAsync("which wp", { uid })());
 
     // construct nginx config
     const wpSite = new WpSite({ domain, dbName, dbUser, dbPassword });
@@ -144,6 +142,7 @@ class SocketCommands extends SocketBase {
     // 1. Create folder
     const homeDir = await this._homeDir(uid),
       wpHomeDir = path.join(homeDir, "www", domain);
+    console.log(`${dbUser}'s home dir is "${homeDir}"`);
 
     // NOTE - for testing only, remove wpHomeDir if exists
     if (process.env.NODE_ENV === "development" && fs.existsSync(wpHomeDir))
