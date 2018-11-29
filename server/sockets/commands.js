@@ -34,6 +34,9 @@ const executeCommand = (target, prop, descriptor) => {
 };
 
 class SocketCommands extends SocketBase {
+  _mysqlDbHost =
+    process.env.NODE_ENV === "development" ? "188.166.177.127" : "localhost";
+
   constructor(io, socket) {
     super(io, socket);
     ["executeRestartNginx", "createWordpressSite", "checkDomain"].forEach(
@@ -109,7 +112,10 @@ class SocketCommands extends SocketBase {
     // 2. Execute wp commands
     const commands = [
       `wp core download`,
-      `wp config create --dbname=${dbName} --dbuser=${dbUser} --dbpass=${dbPassword}`
+      `wp config create --dbname='${dbUser}_${dbName}' --dbuser=${dbUser} --dbpass=${dbPassword} --dbhost=${
+        this._mysqlDbHost
+      }`,
+      `wp db create`
     ];
     for (const command of commands) {
       await this._shellCommand(command, log => logger({ log }), {
