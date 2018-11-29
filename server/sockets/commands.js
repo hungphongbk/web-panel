@@ -71,7 +71,7 @@ class SocketCommands extends SocketBase {
       data => {
         homeDir = data;
       },
-      uid ? { uid } : {}
+      typeof uid === "number" ? { uid } : {}
     )().then(() => homeDir.trim());
   }
 
