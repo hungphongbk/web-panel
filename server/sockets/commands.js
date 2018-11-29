@@ -94,6 +94,14 @@ class SocketCommands extends SocketBase {
       });
   }
 
+  _shellCommandAsync(cmd, _processOpts = {}) {
+    return async logger => {
+      let data = "";
+      await this._shellCommand(cmd, d => (data = d), _processOpts)(logger);
+      return data;
+    };
+  }
+
   @executeCommand
   async executeRestartNginx(logger) {
     const { value: cmd } = await Setting.findOne({ key: "nginxRestartCmd" });
@@ -113,6 +121,8 @@ class SocketCommands extends SocketBase {
   async createWordpressSite(logger, { domain, dbUser, dbPassword, dbName }) {
     const uid = await this._uid(dbUser);
     console.log(`${dbUser} has uid = ${uid}`);
+    console.log(`Path of wp is`);
+    console.log(await this._shellCommandAsync("which wp", { uid }));
 
     // construct nginx config
     const wpSite = new WpSite({ domain, dbName, dbUser, dbPassword });
