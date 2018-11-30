@@ -126,6 +126,7 @@ class SocketCommands extends SocketBase {
     const { value: nginxConfDir } = await Setting.findOne({
       key: "nginxConfDir"
     });
+
     //generate nginx conf path
     wpSite.nginxConfFile = path.join(nginxConfDir, `${dbName}.conf`);
     await wpSite.save();

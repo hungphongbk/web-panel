@@ -82,7 +82,7 @@ server {
         }
         fastcgi_cache_key "$scheme$request_method$host$request_uri$rt_session";
         fastcgi_intercept_errors on;
-        fastcgi_pass unix:/usr/local/var/run/php72-fpm-root.sock;
+        fastcgi_pass unix:/usr/local/var/run/php72-fpm-{{dbUser}}.sock;
 
         fastcgi_cache_bypass $no_cache;
         fastcgi_no_cache $no_cache;
