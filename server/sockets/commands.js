@@ -60,19 +60,15 @@ class SocketCommands extends SocketBase {
 
   /**
    * Get Home Directory of user with specific UID
-   * @param uid
    * @returns {Promise<string>}
    * @private
+   * @param {string} username
    */
-  _homeDir(uid = undefined) {
+  _homeDir(username) {
     let homeDir = "";
-    return this._shellCommand(
-      "echo $HOME",
-      data => {
-        homeDir = data;
-      },
-      typeof uid === "number" ? { uid } : {}
-    )().then(() => homeDir.trim());
+    return this._shellCommand(`eval echo "~${username}"`, data => {
+      homeDir = data;
+    })().then(() => homeDir.trim());
   }
 
   _shellCommand(cmd, onData = () => {}, _processOpts = {}) {
@@ -140,7 +136,7 @@ class SocketCommands extends SocketBase {
 
     // scaffold wordpress folder
     // 1. Create folder
-    const homeDir = await this._homeDir(uid),
+    const homeDir = await this._homeDir(dbUser),
       wpHomeDir = path.join(homeDir, "www", domain);
     console.log(`${dbUser}'s home dir is "${homeDir}"`);
 
