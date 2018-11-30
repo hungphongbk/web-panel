@@ -30,11 +30,11 @@ server {
 {{/ssl}}
 
     # access_log off;
-    access_log /home/myowngrave/logs/{{domain}}/access.log;
+    access_log /home/{{dbUser}}/logs/{{domain}}/access.log;
     # error_log off;
-    error_log /home/myowngrave/logs/{{domain}}.error.log;
+    error_log /home/{{dbUser}}/logs/{{domain}}.error.log;
 
-    root /home/myowngrave/{{domain}};
+    root /home/{{dbUser}}/www/{{domain}};
     index index.php index.html index.htm;
 
     location ^~ /.well-known/acme-challenge/ {

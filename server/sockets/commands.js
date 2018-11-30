@@ -173,7 +173,8 @@ class SocketCommands extends SocketBase {
     for (const command of commands) {
       await this._shellCommand(command, log => logger({ log }), {
         cwd: wpHomeDir,
-        uid
+        uid,
+        gid: uid
       })(logger);
     }
   }
