@@ -114,7 +114,10 @@ class SocketCommands extends SocketBase {
   }
 
   @executeCommand
-  async createWordpressSite(logger, { domain, dbUser, dbPassword, dbName }) {
+  async createWordpressSite(
+    logger,
+    { domain, dbUser, dbPassword, dbName, installMethod, installInfo }
+  ) {
     const uid = await this._uid(dbUser);
     console.log(`${dbUser} has uid = ${uid}`);
 
@@ -159,6 +162,13 @@ class SocketCommands extends SocketBase {
       }`,
       `wp db create`
     ];
+    if (installMethod === "auto") {
+      const params = Object.entries(installInfo).reduce(
+        (acc, [key, value]) => acc + ` --${key.toSnakeCase()}='${value}'`,
+        ""
+      );
+      commands.push("wp core install " + params.trim());
+    }
     for (const command of commands) {
       await this._shellCommand(command, log => logger({ log }), {
         cwd: wpHomeDir,
