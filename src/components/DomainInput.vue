@@ -1,5 +1,5 @@
 <template>
-    <b-form-group label="Specify an existing domain (required)" description="Make sure your domain has been pointed to IP 188.166.177.127 :)">
+    <b-form-group label="Specify an existing domain (required)" description="Make sure your domain has been pointed to IP 188.166.177.127 :)" :invalid-feedback="error" :state="valid>=0">
         <b-input-group>
             <b-form-input v-model="domain$"></b-form-input>
             <b-input-group-append>
@@ -31,7 +31,8 @@ export default {
   },
   data: () => ({
     domain$: "",
-    valid: 0
+    valid: 0,
+    error: ""
   }),
   computed: {
     checkVariant() {
@@ -49,9 +50,11 @@ export default {
   },
   sockets: {
     checkDomainResponse(parsed) {
+      console.log(parsed);
       const found = parsed.found;
       if (!found) {
         this.valid = -1;
+        this.error = '<b>ERROR</b> '+parsed.error;
         return;
       }
       const ipAddr = found.ipAddr.trim();

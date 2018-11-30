@@ -168,18 +168,16 @@ class SocketCommands extends SocketBase {
   }
 
   async checkDomain({ domain }) {
-    let content = "",
-      template = getTemplateFile("nslookup.mustache");
-    await this._shellCommand(
-      `nslookup ${domain} 8.8.8.8`,
-      data => (content += data)
-    )();
+    let template = getTemplateFile("nslookup.mustache"),
+      content = await this._shellCommandAsync(`nslookup ${domain} 8.8.8.8`)();
     content = content.trim();
+    console.log(content);
 
     const parsedData = reverseMustache({
       template,
       content
     });
+    console.log(parsedData);
     this.socket.emit("checkDomainResponse", parsedData);
   }
 }
