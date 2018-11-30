@@ -129,20 +129,12 @@ class SocketCommands extends SocketBase {
 
     //generate nginx conf path
     wpSite.nginxConfFile = path.join(nginxConfDir, `${dbName}.conf`);
-    await wpSite.save();
-    const nginxConfigContent = Mustache.render(
-      getTemplateFile("wordpress-nginx.conf.mustache"),
-      wpSite.toJSON()
-    );
-
-    // write nginx config into
-    fs.writeFileSync(wpSite.nginxConfFile, nginxConfigContent);
+    await wpSite.saveWithTriggers(logger);
 
     // scaffold wordpress folder
     // 1. Create folder
     const homeDir = await this._homeDir(dbUser),
       wpHomeDir = path.join(homeDir, "www", domain);
-    console.log(`${dbUser}'s home dir is "${homeDir}"`);
 
     // NOTE - for testing only, remove wpHomeDir if exists
     if (process.env.NODE_ENV === "development" && fs.existsSync(wpHomeDir))
@@ -174,7 +166,7 @@ class SocketCommands extends SocketBase {
       await this._shellCommand(command, log => logger({ log }), {
         cwd: wpHomeDir,
         uid,
-        gid: uid
+        ...(process.env.NODE_ENV === "production" ? { gid: uid } : {})
       })(logger);
     }
   }
