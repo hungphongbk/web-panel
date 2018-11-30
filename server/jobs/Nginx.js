@@ -4,7 +4,11 @@ import fs from "fs";
 import Setting from "../models/Settings";
 import { _shellCommandAsync } from "./shell";
 
-function updateConfig(obj, template = "wordpress-nginx.conf.mustache") {
+async function updateConfig(obj, template = "wordpress-nginx.conf.mustache") {
+  const { value: nginxConfDir } = await Setting.findOne({
+    key: "nginxConfDir"
+  });
+  obj.nginxConfDir = nginxConfDir;
   const nginxConfigContent = Mustache.render(getTemplateFile(template), obj);
   fs.writeFileSync(obj.nginxConfFile, nginxConfigContent);
 }

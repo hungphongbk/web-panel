@@ -14,6 +14,8 @@ import {
   SOCKET_EVENT_TERMINAL_OPEN
 } from "../../universal/consts";
 import WpSite from "../models/WpSites";
+import WordpressJobs from "../jobs/Wordpress";
+import NginxJobs from "../jobs/Nginx";
 
 const executeCommand = (target, prop, descriptor) => {
   let { value: fn } = descriptor;
@@ -121,31 +123,20 @@ class SocketCommands extends SocketBase {
     const uid = await this._uid(dbUser);
     console.log(`${dbUser} has uid = ${uid}`);
 
-    // construct nginx config
-    const wpSite = new WpSite({ domain, dbName, dbUser, dbPassword });
-    const { value: nginxConfDir } = await Setting.findOne({
-      key: "nginxConfDir"
+    // generate Nginx Config
+    const wpSite = new WpSite({
+      domain,
+      dbName,
+      dbUser,
+      dbPassword,
+      installMethod,
+      installInfo
     });
-
-    //generate nginx conf path
-    wpSite.nginxConfFile = path.join(nginxConfDir, `${dbName}.conf`);
-    await wpSite.saveWithTriggers(logger);
+    await NginxJobs.updateConfig(wpSite);
 
     // scaffold wordpress folder
     // 1. Create folder
-    const homeDir = await this._homeDir(dbUser),
-      wpHomeDir = path.join(homeDir, "www", domain);
-
-    // NOTE - for testing only, remove wpHomeDir if exists
-    if (process.env.NODE_ENV === "development" && fs.existsSync(wpHomeDir))
-      await this._shellCommand(`rm -rf ${wpHomeDir}`, () => {}, { uid })(
-        logger
-      );
-    await this._shellCommand(
-      `mkdir -p ${wpHomeDir}; chmod ${wpHomeDir} 644`,
-      () => {},
-      { uid }
-    )(logger);
+    const wpHomeDir = await WordpressJobs.createHomeDir(wpSite)(logger);
 
     // 2. Execute wp commands (with dbUser permission)
     const commands = [
@@ -169,6 +160,8 @@ class SocketCommands extends SocketBase {
         ...(process.env.NODE_ENV === "production" ? { gid: uid } : {})
       })(logger);
     }
+
+    await wpSite.saveWithTriggers(logger);
   }
 
   async checkDomain({ domain }) {

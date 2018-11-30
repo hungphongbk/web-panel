@@ -8,7 +8,11 @@ const schema = new mongoose.Schema({
   dbPassword: { type: String, required: true },
   nginxConfFile: { type: String, required: true },
   ssl: { type: Boolean, default: false },
-  isCreated: { type: Boolean, default: false }
+  wpHomeDir: { type: String },
+  isCreated: { type: Boolean, default: false },
+  isInstalled: { type: Boolean, default: false },
+  installMethod: { type: String, required: true },
+  installInfo: { type: Object, default: () => ({}) }
 });
 
 schema.methods.saveWithTriggers = async function(logger = () => {}) {
@@ -17,7 +21,7 @@ schema.methods.saveWithTriggers = async function(logger = () => {}) {
   if (isCreated && ssl) {
   }
 
-  NginxJobs.updateConfig(this.toJSON());
+  // NginxJobs.updateConfig(this);
   await NginxJobs.restart(logger);
 
   this.isCreated = true;
