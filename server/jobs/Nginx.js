@@ -1,3 +1,4 @@
+import path from "path";
 import Mustache from "mustache";
 import { getTemplateFile } from "../helpers";
 import fs from "fs";
@@ -8,7 +9,7 @@ async function updateConfig(obj, template = "wordpress-nginx.conf.mustache") {
   const { value: nginxConfDir } = await Setting.findOne({
     key: "nginxConfDir"
   });
-  obj.nginxConfDir = nginxConfDir;
+  obj.nginxConfFile = path.join(nginxConfDir, obj.domain + ".conf");
   const nginxConfigContent = Mustache.render(getTemplateFile(template), obj);
   fs.writeFileSync(obj.nginxConfFile, nginxConfigContent);
 }
