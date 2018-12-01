@@ -5,9 +5,11 @@ const _mysqlDbHost =
   process.env.NODE_ENV === "development" ? "188.166.177.127" : "localhost";
 
 const createHomeDir = model => async (logger = () => {}) => {
-  const { dbUser, domain } = model,
-    homeDir = await _homeDir(dbUser),
-    uid = await _uid(dbUser);
+  await model.ensureUser();
+  const { dbUser, domain, uid } = model,
+    homeDir = await _homeDir(dbUser);
+
+  model.uid = uid;
 
   const wpHomeDir = (model.wpHomeDir = path.join(homeDir, "www", domain));
 
@@ -16,9 +18,9 @@ const createHomeDir = model => async (logger = () => {}) => {
 };
 
 const createSite = model => async (logger = () => {}) => {
-  const { dbUser, dbName, dbPassword } = model,
-    wpHomeDir = await createHomeDir(model)(logger),
-    uid = await _uid(dbUser);
+  await model.ensureUser();
+  const { dbUser, dbName, dbPassword, uid } = model,
+    wpHomeDir = await createHomeDir(model)(logger);
 
   const commands = [
     `wp core download`,
@@ -37,11 +39,11 @@ const createSite = model => async (logger = () => {}) => {
 };
 
 const installSite = model => async (logger = () => {}) => {
+  await model.ensureUser();
   //make sure website is created
   if (!model.isCreated) await createSite(model)(logger);
 
-  const { installMethod, installInfo, wpHomeDir, dbName } = model,
-    uid = await _uid(dbName);
+  const { installMethod, installInfo, wpHomeDir, dbName, uid } = model;
 
   if (installMethod === "auto") {
     const params = Object.entries(installInfo).reduce(

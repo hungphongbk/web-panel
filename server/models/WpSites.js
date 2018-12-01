@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import NginxJobs from "../jobs/Nginx";
+import { _uid } from "../jobs/shell";
 
 const schema = new mongoose.Schema({
   domain: { type: String, required: true },
@@ -12,8 +13,15 @@ const schema = new mongoose.Schema({
   isCreated: { type: Boolean, default: false },
   isInstalled: { type: Boolean, default: false },
   installMethod: { type: String, required: true },
-  installInfo: { type: Object, default: () => ({}) }
+  installInfo: { type: Object, default: () => ({}) },
+  uid: { type: Number, default: -1 }
 });
+
+schema.methods.ensureUser = async function() {
+  if (!this.uid) {
+    this.uid = await _uid(this.dbUser);
+  }
+};
 
 schema.methods.saveWithTriggers = async function(logger = () => {}) {
   const { isCreated, ssl } = this;
