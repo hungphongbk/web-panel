@@ -23,20 +23,6 @@ schema.methods.ensureUser = async function() {
   }
 };
 
-schema.methods.saveWithTriggers = async function(logger = () => {}) {
-  const { isCreated, ssl } = this;
-
-  if (isCreated && ssl) {
-  }
-
-  // NginxJobs.updateConfig(this);
-  await NginxJobs.restart(logger);
-
-  this.isCreated = true;
-  await this.save();
-  return this;
-};
-
 const WpSite = mongoose.model("WpSite", schema);
 
 export default WpSite;

@@ -16,6 +16,7 @@ import {
 import WpSite from "../models/WpSites";
 import WordpressJobs from "../jobs/Wordpress";
 import NginxJobs from "../jobs/Nginx";
+import SSLCert from "../jobs/SSLCert";
 
 const executeCommand = (target, prop, descriptor) => {
   let { value: fn } = descriptor;
@@ -120,9 +121,6 @@ class SocketCommands extends SocketBase {
     logger,
     { domain, dbUser, dbPassword, dbName, installMethod, installInfo }
   ) {
-    const uid = await this._uid(dbUser);
-    console.log(`${dbUser} has uid = ${uid}`);
-
     // generate Nginx Config
     const wpSite = new WpSite({
       domain,
@@ -132,36 +130,30 @@ class SocketCommands extends SocketBase {
       installMethod,
       installInfo
     });
-    await NginxJobs.updateConfig(wpSite);
-
     // scaffold wordpress folder
     // 1. Create folder
-    const wpHomeDir = await WordpressJobs.createHomeDir(wpSite)(logger);
+    await WordpressJobs.createHomeDir(wpSite)(logger);
 
     // 2. Execute wp commands (with dbUser permission)
-    const commands = [
-      `wp core download`,
-      `wp config create --dbname='${dbUser}_${dbName}' --dbuser=${dbUser} --dbpass=${dbPassword} --dbhost=${
-        this._mysqlDbHost
-      }`,
-      `wp db create`
-    ];
-    if (installMethod === "auto") {
-      const params = Object.entries(installInfo).reduce(
-        (acc, [key, value]) => acc + ` --${key.toSnakeCase()}='${value}'`,
-        ""
-      );
-      commands.push("wp core install " + params.trim());
-    }
-    for (const command of commands) {
-      await this._shellCommand(command, log => logger({ log }), {
-        cwd: wpHomeDir,
-        uid,
-        ...(process.env.NODE_ENV === "production" ? { gid: uid } : {})
-      })(logger);
-    }
+    await WordpressJobs.createSite(wpSite)(logger);
+    await WordpressJobs.installSite(wpSite)(logger);
+    wpSite.isCreated = true;
+    await wpSite.save();
+    await SSLCert.generate({
+      uid: wpSite.uid,
+      domain: wpSite.domain,
+      webRoot: wpSite.wpHomeDir
+    })(logger);
+    await NginxJobs.restart(logger);
+  }
 
-    await wpSite.saveWithTriggers(logger);
+  @executeCommand
+  async updateWordpressSite(logger, _wpSite) {
+    const wpSite = await WpSite.findOne({ dbName: _wpSite.dbName });
+    Object.assign(wpSite, _wpSite);
+    await WordpressJobs.updateSite(wpSite)(logger);
+    await wpSite.save();
+    await NginxJobs.restart(logger);
   }
 
   async checkDomain({ domain }) {

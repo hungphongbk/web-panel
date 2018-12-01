@@ -1,5 +1,6 @@
-import { _homeDir, _mkDir, _shellCommandAsync, _uid } from "./shell";
+import { _homeDir, _mkDir, _shellCommandAsync } from "./shell";
 import path from "path";
+import NginxJobs from "./Nginx";
 
 const _mysqlDbHost =
   process.env.NODE_ENV === "development" ? "188.166.177.127" : "localhost";
@@ -17,6 +18,12 @@ const createHomeDir = model => async (logger = () => {}) => {
   return wpHomeDir;
 };
 
+/**
+ *
+ * Must restart Nginx after created
+ * @param model
+ * @returns {Function}
+ */
 const createSite = model => async (logger = () => {}) => {
   await model.ensureUser();
   const { dbUser, dbName, dbPassword, uid } = model,
@@ -36,6 +43,7 @@ const createSite = model => async (logger = () => {}) => {
     })(logger);
 
   model.isCreated = true;
+  await NginxJobs.updateConfig(model);
 };
 
 const installSite = model => async (logger = () => {}) => {
@@ -43,7 +51,7 @@ const installSite = model => async (logger = () => {}) => {
   //make sure website is created
   if (!model.isCreated) await createSite(model)(logger);
 
-  const { installMethod, installInfo, wpHomeDir, dbName, uid } = model;
+  const { installMethod, installInfo, wpHomeDir, uid } = model;
 
   if (installMethod === "auto") {
     const params = Object.entries(installInfo).reduce(
@@ -58,7 +66,29 @@ const installSite = model => async (logger = () => {}) => {
   }
 };
 
-const updateSite = obj => async (logger = () => {}) => {};
+/**
+ *
+ * Must restart Nginx after updated
+ * @param model
+ * @returns {Function}
+ */
+const updateSite = model => async (logger = () => {}) => {
+  await model.ensureUser();
+  const { wpHomeDir, domain, uid } = model;
+  if (model.ssl === true) {
+    await _shellCommandAsync(
+      `wp search-replace 'http://${domain}' 'https://${domain}' --skip-columns=grid`,
+      {
+        cwd: wpHomeDir,
+        uid,
+        ...(process.env.NODE_ENV === "production" ? { gid: uid } : {})
+      }
+    )(logger);
+    await NginxJobs.updateConfig(model);
+  }
+
+  await NginxJobs.restart(logger);
+};
 
 const WordpressJobs = {
   createHomeDir,
