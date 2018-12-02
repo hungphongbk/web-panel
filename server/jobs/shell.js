@@ -10,9 +10,9 @@ export function _shellCommand(cmd, onData = () => {}, _processOpts = {}) {
   return (logger = null) =>
     new Promise(resolve => {
       logger && logger({ cmd });
-      const childProcess = spawn(cmd + " 2>&1", {
+      const childProcess = spawn(`source ~/.bashrc && ${cmd} 2>&1``, {
         stdio: "pipe",
-        shell: '/bin/bash',
+        shell: true,
         ...processOpts
       });
       childProcess.stdout.on("data", data => onData(ab2str(data)));
