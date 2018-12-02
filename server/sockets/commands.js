@@ -139,11 +139,14 @@ class SocketCommands extends SocketBase {
     await WordpressJobs.installSite(wpSite)(logger);
     wpSite.isCreated = true;
     await wpSite.save();
-    await SSLCert.generate({
-      uid: wpSite.uid,
-      domain: wpSite.domain,
-      webRoot: wpSite.wpHomeDir
-    })(logger);
+    console.log("fuck");
+    console.log(
+      await SSLCert.generate({
+        uid: wpSite.uid,
+        domain: wpSite.domain,
+        webRoot: wpSite.wpHomeDir
+      })(logger)
+    );
     await NginxJobs.restart(logger);
   }
 

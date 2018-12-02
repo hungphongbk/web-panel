@@ -14,7 +14,7 @@ const generate = ({ uid, domain, webRoot }) => async (logger = () => {}) => {
   // Get last 4 lines
   const tmp = output.trim().split("\n");
   output = tmp.slice(tmp.length - 4).join("\n");
-  console.log(output);
+  return output;
 };
 
 const SSLCert = {
