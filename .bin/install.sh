@@ -6,4 +6,4 @@ if ! [ -x "$(command -v acme.sh)" ]; then
   source ~/.bashrc
 fi
 
-acme.sh -h
+command -v acme.sh
