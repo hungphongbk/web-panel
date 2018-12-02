@@ -57,6 +57,8 @@ module.exports = {
       repo: "git@github.com:hungphongbk/web-panel.git",
       path: "/root/www/web-panel",
       "post-deploy":
+        "chmod -R a+x .bin/* && " +
+        "./bin/install.sh && " +
         "pm2 reload pm2.config.js --env production",
       env: {
         NODE_ENV: "production",
