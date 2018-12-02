@@ -147,6 +147,7 @@ class SocketCommands extends SocketBase {
         webRoot: wpSite.wpHomeDir
       })(logger)
     );
+    console.log("fuck");
     await NginxJobs.restart(logger);
   }
 
