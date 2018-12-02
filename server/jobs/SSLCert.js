@@ -3,7 +3,7 @@ import { _shellCommandAsync } from "./shell";
 //TODO: acme.sh command not found
 const generate = ({ uid, domain, webRoot }) => async (logger = () => {}) => {
   let output = await _shellCommandAsync(
-    `/root/.acme.sh/acme.sh --issue -w ${webRoot} -d ${domain} --force`,
+    `~/.acme.sh/acme.sh --issue -w ${webRoot} -d ${domain} --force`,
     {
       cwd: webRoot,
       uid
