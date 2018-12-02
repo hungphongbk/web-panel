@@ -12,7 +12,7 @@ export function _shellCommand(cmd, onData = () => {}, _processOpts = {}) {
       logger && logger({ cmd });
       const childProcess = spawn(cmd + " 2>&1", {
         stdio: "pipe",
-        shell: true,
+        shell: '/bin/bash',
         ...processOpts
       });
       childProcess.stdout.on("data", data => onData(ab2str(data)));
