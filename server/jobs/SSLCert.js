@@ -2,7 +2,7 @@ import { _shellCommandAsync } from "./shell";
 
 //TODO: acme.sh command not found
 const generate = ({ uid, domain, webRoot }) => async (logger = () => {}) => {
-  console.log(await _shellCommandAsync("echo $PATH"))();
+  console.log(await _shellCommandAsync("echo $PATH", { uid }))();
   let output = await _shellCommandAsync(
     `acme.sh --issue -w ${webRoot} -d ${domain} --force`,
     {
