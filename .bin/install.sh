@@ -5,5 +5,3 @@ if ! [ -x "$(command -v acme.sh)" ]; then
   curl https://get.acme.sh | sh
   source ~/.bashrc
 fi
-
-command -v acme.sh
