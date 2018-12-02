@@ -143,6 +143,7 @@ class SocketCommands extends SocketBase {
     console.log(
       await SSLCert.generate({
         uid: wpSite.uid,
+        user: wpSite.dbUser,
         domain: wpSite.domain,
         webRoot: wpSite.wpHomeDir
       })(logger)

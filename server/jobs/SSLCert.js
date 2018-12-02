@@ -1,9 +1,12 @@
-import { _shellCommandAsync } from "./shell";
+import { _homeDir, _shellCommandAsync } from "./shell";
 
 //TODO: acme.sh command not found
-const generate = ({ uid, domain, webRoot }) => async (logger = () => {}) => {
+const generate = ({ uid, user, domain, webRoot }) => async (
+  logger = () => {}
+) => {
+  const homeDir = await _homeDir(user);
   let output = await _shellCommandAsync(
-    `~/.acme.sh/acme.sh --issue -w ${webRoot} -d ${domain} --force`,
+    `${homeDir}/.acme.sh/acme.sh --issue -w ${webRoot} -d ${domain} --force`,
     {
       cwd: webRoot,
       uid
