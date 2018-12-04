@@ -15,8 +15,8 @@ const generate = ({ uid, user, domain, webRoot }) => async (
   )(logger);
 
   // Get last 4 lines
-  const tmp = output.trim().split("\n");
-  output = tmp.slice(tmp.length - 4).join("\n");
+  // const tmp = output.trim().split("\n");
+  // output = tmp.slice(tmp.length - 4).join("\n");
   return output;
 };
 
