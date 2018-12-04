@@ -18,11 +18,9 @@ const schema = new mongoose.Schema({
 });
 
 schema.methods.ensureUser = async function() {
-  if (!this.uid) {
+  if (this.uid < 0) {
     this.uid = await _uid(this.dbUser);
   }
-
-  await this.save();
 };
 
 const WpSite = mongoose.model("WpSite", schema);
