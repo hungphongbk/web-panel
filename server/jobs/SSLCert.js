@@ -5,12 +5,13 @@ const generate = ({ uid, user, domain, webRoot }) => async (
   logger = () => {}
 ) => {
   const homeDir = await _homeDir(user);
+  console.log(uid);
   let output = await _shellCommandAsync(
     `whoami`,
     {
       cwd: webRoot,
-      // uid,
-      // ...(process.env.NODE_ENV === "production" ? { gid: uid } : {})
+      uid,
+      ...(process.env.NODE_ENV === "production" ? { gid: uid } : {})
     }
   )(logger);
 
