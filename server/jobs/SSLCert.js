@@ -5,9 +5,8 @@ const generate = ({ uid, user, domain, webRoot }) => async (
   logger = () => {}
 ) => {
   const homeDir = await _homeDir(user);
-  console.log(uid);
   let output = await _shellCommandAsync(
-    `whoami`,
+    `${homeDir}/.acme.sh/acme.sh --issue -w ${webRoot} -d ${domain} --force`,
     {
       cwd: webRoot,
       uid,
@@ -16,8 +15,8 @@ const generate = ({ uid, user, domain, webRoot }) => async (
   )(logger);
 
   // Get last 4 lines
-  // const tmp = output.trim().split("\n");
-  // output = tmp.slice(tmp.length - 4).join("\n");
+  const tmp = output.trim().split("\n");
+  output = tmp.slice(tmp.length - 4).join("\n");
   return output;
 };
 
