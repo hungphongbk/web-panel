@@ -133,6 +133,7 @@ class SocketCommands extends SocketBase {
     // scaffold wordpress folder
     // 1. Create folder
     await WordpressJobs.createHomeDir(wpSite)(logger);
+    console.log(wpSite.uid);
 
     // 2. Execute wp commands (with dbUser permission)
     await WordpressJobs.createSite(wpSite)(logger);

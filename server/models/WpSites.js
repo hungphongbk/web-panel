@@ -21,6 +21,8 @@ schema.methods.ensureUser = async function() {
   if (!this.uid) {
     this.uid = await _uid(this.dbUser);
   }
+
+  await this.save();
 };
 
 const WpSite = mongoose.model("WpSite", schema);
