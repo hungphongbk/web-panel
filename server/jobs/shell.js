@@ -23,7 +23,7 @@ export function _shellCommand(cmd, onData = () => {}, _processOpts = {}) {
 export function _shellCommandAsync(cmd, _processOpts = {}) {
   return async logger => {
     let data = "";
-    await _shellCommand(cmd, d => (data = d), _processOpts)(logger);
+    await _shellCommand(cmd, d => (data += d), _processOpts)(logger);
     return data;
   };
 }
