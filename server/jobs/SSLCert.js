@@ -6,7 +6,7 @@ const generate = ({ uid, user, domain, webRoot }) => async (
 ) => {
   const homeDir = await _homeDir(user);
   let output = await _shellCommandAsync(
-    `pwd`,
+    `whoami`,
     {
       cwd: webRoot,
       uid,
