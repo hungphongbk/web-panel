@@ -1,4 +1,4 @@
-import { _homeDir, _mkDir, _shellCommandAsync } from "./shell";
+import { _homeDir, _mkDir, _shellCommandAsync, _shellWithUser } from "./shell";
 import path from "path";
 import NginxJobs from "./Nginx";
 
@@ -35,11 +35,12 @@ const createSite = model => async (logger = () => {}) => {
   ];
 
   for (const command of commands)
-    await _shellCommandAsync(command, {
-      cwd: wpHomeDir,
-      uid,
-      ...(process.env.NODE_ENV === "production" ? { gid: uid } : {})
-    })(logger);
+    await _shellCommandAsync(
+      command,
+      _shellWithUser(uid)({
+        cwd: wpHomeDir
+      })
+    )(logger);
 
   model.isCreated = true;
   await NginxJobs.updateConfig(model);
@@ -57,11 +58,12 @@ const installSite = model => async (logger = () => {}) => {
       (acc, [key, value]) => acc + ` --${key.toSnakeCase()}='${value}'`,
       ""
     );
-    await _shellCommandAsync(`wp core install ${params.trim()}`, {
-      cwd: wpHomeDir,
-      uid,
-      ...(process.env.NODE_ENV === "production" ? { gid: uid } : {})
-    })(logger);
+    await _shellCommandAsync(
+      `wp core install ${params.trim()}`,
+      _shellWithUser(uid)({
+        cwd: wpHomeDir
+      })
+    )(logger);
   }
 };
 
@@ -77,11 +79,9 @@ const updateSite = model => async (logger = () => {}) => {
   if (model.ssl === true) {
     await _shellCommandAsync(
       `wp search-replace 'http://${domain}' 'https://${domain}' --skip-columns=grid`,
-      {
-        cwd: wpHomeDir,
-        uid,
-        ...(process.env.NODE_ENV === "production" ? { gid: uid } : {})
-      }
+      _shellWithUser(uid)({
+        cwd: wpHomeDir
+      })
     )(logger);
     await NginxJobs.updateConfig(model);
   }

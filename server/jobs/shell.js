@@ -53,3 +53,11 @@ export function _mkDir(dir, uid, permission = "644") {
       uid
     })(logger);
 }
+
+export function _shellWithUser(uid) {
+  return (config = {}) => ({
+    ...config,
+    uid,
+    ...(process.env.NODE_ENV === "production" ? { gid: uid } : {})
+  });
+}

@@ -1,4 +1,4 @@
-import { _homeDir, _shellCommandAsync } from "./shell";
+import { _homeDir, _shellCommandAsync, _shellWithUser } from "./shell";
 
 //TODO: review bashrc problem
 const generate = ({ uid, user, domain, webRoot }) => async (
@@ -7,11 +7,9 @@ const generate = ({ uid, user, domain, webRoot }) => async (
   const homeDir = await _homeDir(user);
   let output = await _shellCommandAsync(
     `${homeDir}/.acme.sh/acme.sh --issue -w ${webRoot} -d ${domain} --force`,
-    {
-      cwd: webRoot,
-      uid,
-      ...(process.env.NODE_ENV === "production" ? { gid: uid } : {})
-    }
+    _shellWithUser(uid)({
+      cwd: webRoot
+    })
   )(logger);
 
   // Get last 4 lines
