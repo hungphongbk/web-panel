@@ -1,6 +1,6 @@
 import { _homeDir, _shellCommandAsync } from "./shell";
 
-//TODO: acme.sh command not found
+//TODO: review bashrc problem
 const generate = ({ uid, user, domain, webRoot }) => async (
   logger = () => {}
 ) => {
