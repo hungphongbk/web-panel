@@ -32,15 +32,14 @@ const createSite = model => async (logger = () => {}) => {
     `wp core download`,
     `wp config create --dbname='${dbUser}_${dbName}' --dbuser=${dbUser} --dbpass=${dbPassword} --dbhost=${_mysqlDbHost}`,
     `wp db create`
-  ];
+  ].join("; ");
 
-  for (const command of commands)
-    await _shellCommandAsync(
-      command,
-      _shellWithUser(uid)({
-        cwd: wpHomeDir
-      })
-    )(logger);
+  await _shellCommandAsync(
+    commands,
+    _shellWithUser(uid)({
+      cwd: wpHomeDir
+    })
+  )(logger);
 
   model.isCreated = true;
   await NginxJobs.updateConfig(model);
