@@ -9,7 +9,8 @@ const generate = ({ uid, user, domain, webRoot }) => async (
     `${homeDir}/.acme.sh/acme.sh --issue -w ${webRoot} -d ${domain} --force`,
     {
       cwd: webRoot,
-      uid
+      uid,
+      ...(process.env.NODE_ENV === "production" ? { gid: uid } : {})
     }
   )(logger);
 

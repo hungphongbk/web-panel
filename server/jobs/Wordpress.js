@@ -2,8 +2,7 @@ import { _homeDir, _mkDir, _shellCommandAsync } from "./shell";
 import path from "path";
 import NginxJobs from "./Nginx";
 
-const _mysqlDbHost =
-  process.env.NODE_ENV === "development" ? "188.166.177.127" : "localhost";
+const _mysqlDbHost = "localhost";
 
 const createHomeDir = model => async (logger = () => {}) => {
   await model.ensureUser();
