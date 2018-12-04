@@ -1,7 +1,11 @@
 import mongoose from "mongoose";
 import path from "path";
 
-mongoose.connect("mongodb://localhost/webPanel").then(() => {
+const connectionString =
+  process.env.NODE_ENV === "development"
+    ? "localhost/webPanel"
+    : "localhost/webPanel";
+mongoose.connect(`mongodb://${connectionString}`).then(() => {
   console.log("Completed setup WebPanel DB");
 });
 

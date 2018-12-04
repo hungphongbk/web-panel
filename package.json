@@ -5,7 +5,7 @@
   "scripts": {
     "serve:client": "BABEL_ENV=browser vue-cli-service serve",
     "serve:server": "nodemon ./server.js",
-    "serve": "npm-run-all serve:*",
+    "serve": "run-p serve:*",
     "start": "BABEL_ENV=node babel-node ./server.js",
     "build": "BABEL_ENV=browser vue-cli-service build",
     "lint": "vue-cli-service lint",
@@ -15,6 +15,7 @@
   "dependencies": {
     "@babel/cli": "^7.1.5",
     "@babel/core": "^7.1.6",
+    "@babel/node": "latest",
     "@babel/plugin-proposal-class-properties": "^7.1.0",
     "@babel/plugin-proposal-decorators": "^7.1.6",
     "@babel/plugin-transform-classes": "^7.1.0",
@@ -50,7 +51,8 @@
     "vuex": "^3.0.1",
     "webpack": "latest",
     "webpack-dev-middleware": "latest",
-    "webpack-hot-middleware": "^2.24.3"
+    "webpack-hot-middleware": "^2.24.3",
+    "nodemon": "latest"
   },
   "devDependencies": {
     "@types/mongoose": "^5.3.1",
